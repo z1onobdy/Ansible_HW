@@ -1,5 +1,5 @@
 provider "google" {
-  credentials = file()
+  credentials = file("hw.json")
   project     = "HomeWork"
   region      = "europe-central2"
   zone        = "europe-central2-b"
