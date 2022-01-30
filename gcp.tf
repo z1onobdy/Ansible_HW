@@ -43,14 +43,15 @@ resource "google_compute_instance" "cntrl" {
     enable-oslogin = false
   }
 
-  connection {
-    type        = "ssh"
-    user        = "z10"
-    private_key = file("/root/privnew.ppk")
-    host        = self.nat_ip
-  }
-
   provisioner "remote-exec" {
+
+    connection {
+      type        = "ssh"
+      user        = "z10"
+      private_key = file("/root/privnew.ppk")
+      host        = self.public_ip
+    }
+
     inline = [
       "sudo yum install epel-release -y",
       "sudo yum install ansible -y"
