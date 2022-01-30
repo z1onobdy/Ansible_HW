@@ -48,7 +48,7 @@ resource "google_compute_instance" "cntrl" {
     connection {
       type        = "ssh"
       user        = "z10"
-      private_key = "file(/root/privnew.ppk)""
+      private_key = "file(/root/privnew.ppk)"
       host        = self.network_interface[0].access_config[0].nat_ip
     }
 
