@@ -28,3 +28,32 @@ resource "google_compute_instance" "Node" {
     }
   }
 }
+
+resource "google_compute_instance" "cntrl" {
+  name     = "cntrl"
+  hostname = "cntrl.example.com"
+
+  machine_type = "e2-medium"
+  boot_disk {
+    initialize_params {
+      image = "centos-cloud/centos-8-v20211214"
+    }
+  }
+  metadata = {
+    enable-oslogin = false
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "sudo yum install epel-release -y",
+      "sudo yum install ansible -y"
+    ]
+  }
+
+  network_interface {
+    network = "default"
+    access_config {
+      // Include this section to give the VM an external ip address
+    }
+  }
+}
