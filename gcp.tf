@@ -43,6 +43,13 @@ resource "google_compute_instance" "cntrl" {
     enable-oslogin = false
   }
 
+  connection {
+    type        = "ssh"
+    user        = "z10"
+    private_key = file("/root/privnew.ppk")
+    host        = self.public_ip
+  }
+
   provisioner "remote-exec" {
     inline = [
       "sudo yum install epel-release -y",
