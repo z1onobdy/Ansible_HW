@@ -54,9 +54,10 @@ resource "google_compute_instance" "cntrl" {
 
     inline = [
       "sudo sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-Linux-*",
-      #"sudo sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-Linux-*",
-      #"sudo yum install epel-release -y",
-      #"sudo yum install ansible -y"
+      "sudo sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-Linux-*",
+      "sudo yum install epel-release -y",
+      "sudo yum install ansible -y",
+      "echo '${join("\n", formatlist("%s %s", google_compute_instance.Node[*].network_interface[0].access_config[0].nat_ip, google_compute_instance.Node[*].hostname))}' | sudo tee -a /etc/hosts",
     ]
   }
 
@@ -81,6 +82,9 @@ resource "null_resource" "node_inctances_hosts_file" {
      inline = [
 #     "echo '${join("\n", formatlist("%v", google_compute_instance.Node[*].network_interface[0].access_config[0].nat_ip))}' | awk 'BEGIN { print \"\\n\\n# test:\" }; { print $0 \" node\" NR\".example.com\"}' | sudo tee -a /etc/hosts",
       "echo '${join("\n", formatlist("%s %s", google_compute_instance.Node[*].network_interface[0].access_config[0].nat_ip, google_compute_instance.Node[*].hostname))}' | sudo tee -a /etc/hosts",
+      "echo '${join("\n", formatlist("%s %s", google_compute_instance.cntrl.network_interface[0].access_config[0].nat_ip, google_compute_instance.cntrl.hostname))}' | sudo tee -a /etc/hosts",
+      "sudo yum install epel-release -y",
+      "sudo yum install ansible -y",
     ]
    }
 }
