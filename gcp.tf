@@ -53,6 +53,7 @@ resource "google_compute_instance" "cntrl" {
     }
 
     inline = [
+
       "sudo yum install epel-release -y",
       "sudo yum install ansible -y"
     ]
@@ -64,4 +65,20 @@ resource "google_compute_instance" "cntrl" {
       // Include this section to give the VM an external ip address
     }
   }
+}
+
+resource "null_resource" "node_inctances_hosts_file" {
+  count = "2"
+
+  connection {
+    type = "ssh"
+    host = "${element(google_compute_instance.Node[*].network_interface[0].access_config[0].nat_ip, (count.index))}"
+    user = "z10"
+    private_key = file("privnew1")
+  }
+  provisioner "remote-exec" {
+     inline = [
+     "echo '${join("\n", formatlist("%v", google_compute_instance.Node[*].network_interface[0].access_config[0].nat_ip))}' | awk 'BEGIN { print \"\\n\\n# test:\" }; { print $0 \" node\" NR\".example.com\"}' | sudo tee -a /etc/hosts",
+    ]
+   }
 }
