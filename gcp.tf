@@ -53,8 +53,8 @@ resource "google_compute_instance" "cntrl" {
     }
 
     inline = [
-      "sudo sed -i 's/mirrorlist=/#mirrorlist/g' /etc/yum.repos.d/CentOS-Linux-*",
-      "sudo sed -i 's/#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org/g' /etc/yum.repos.d/CentOS-Linux-*",
+      "sudo sed -i 's|mirrorlist=/#mirrorlist|g' /etc/yum.repos.d/CentOS-Linux-*",
+      "sudo sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-Linux-*",
       "sudo yum install epel-release -y",
       "sudo yum install ansible -y",
       "echo '${join("\n", formatlist("%s %s", google_compute_instance.Node[*].network_interface[0].access_config[0].nat_ip, google_compute_instance.Node[*].hostname))}' | sudo tee -a /etc/hosts",
