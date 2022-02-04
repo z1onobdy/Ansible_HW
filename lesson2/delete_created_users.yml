@@ -1,0 +1,26 @@
+---
+- hosts: nodes
+  vars_files:
+    - secret.yml
+  tasks:
+  - name: create users Alice, Bob, Carol
+    user:
+        state: absent
+        remove: yes
+        force: yes
+        update_password: on_create
+        name: "{{ item.name }}"
+        #password: "{{ pwdhash | password_hash('sha512')}}"
+        password: "{{ item.name }}"
+        home: "/home/{{ item.homedir }}"
+        comment: "{{ item.comment }}@example.com"
+    loop:
+      - name: alice
+        homedir: alice
+        comment: alice
+      - name: bob
+        homedir: bob
+        comment: bob
+      - name: carol
+        homedir: carol
+        comment: carol

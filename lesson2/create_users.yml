@@ -1,0 +1,15 @@
+---
+- hosts: nodes
+  vars_files:
+    - secret.yml
+  tasks:
+  - name: create users Alice, Bob, Carol
+    no_log: True
+    user:
+        state: present
+        update_password: on_create
+        name: "{{ item.name }}"
+        password: "{{ item.pwd | password_hash('sha512')}}"
+        comment: "{{ item.name }}@example.com"
+        groups: z10
+    loop: "{{ users  }}"
