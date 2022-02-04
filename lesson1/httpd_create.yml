@@ -1,0 +1,25 @@
+---
+- hosts: nodes
+  become: true
+  vars:
+    www_root: /var/www/html
+
+  tasks:
+    - name: install apache httpd
+      yum:  pkg=httpd state=latest
+    - name: copy index.html file
+      copy: src=index.html dest={{ www_root }}/index.html owner=apache group=apache mode=0644
+    - name: enable httpd
+      service:
+        name: httpd
+        enabled: true
+        state: started
+    - name: firewalld open http port
+      firewalld:
+        service: http
+        permanent: true
+        state: enabled
+    - name: restart firewalld
+      service:
+         name: firewalld
+         state: restarted

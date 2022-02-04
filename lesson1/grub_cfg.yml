@@ -1,0 +1,42 @@
+---
+- hosts: nodes
+  become: true
+  vars:
+    www_root: /var/www/html
+
+  tasks:
+     - name: check grub for biosdevname parameter. If exists then replace
+       lineinfile:
+             path: /etc/default/grub
+             state: present
+             backrefs: yes
+             regexp: '^(GRUB_CMDLINE_LINUX=)(.*)(biosdevname.. )(.*\".*)'
+             line: '\1\2biosdevname=0\4'
+
+     - name: check grub for biosdevname parameter. If doesnt exists then create
+       lineinfile:
+             path: /etc/default/grub
+             state: present
+             backrefs: yes
+             regexp: '^(GRUB_CMDLINE_LINUX=(?!.* biosdevname)\"[^\"]+)(\".*)'
+             line: '\1 biosdevname=0\2'
+
+
+     - name: check grub for net.ifname parameter. If exists then replace
+       lineinfile:
+             path: /etc/default/grub
+             state: present
+             backrefs: yes
+             regexp: '^(GRUB_CMDLINE_LINUX=)(.*)(net.ifnames.. )(.*\".*)'
+             line: '\1\2 net.ifnames=0 \4'
+
+     - name: check grub for net.ifname parameter. If doesnt exists then create
+       lineinfile:
+             path: /etc/default/grub
+             state: present
+             backrefs: yes
+             regexp: '^(GRUB_CMDLINE_LINUX=(?!.* net.ifnames)\"[^\"]+)(\".*)'
+             line: '\1 net.ifnames=0\2'
+
+    - name: save changes to grub
+      command: grub2-mkconfig -o /etc/default/grub

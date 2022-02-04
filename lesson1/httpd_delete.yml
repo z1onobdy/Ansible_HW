@@ -1,0 +1,27 @@
+---
+- hosts: nodes
+  become: true
+  vars:
+    www_root: /var/www/html
+
+  tasks:
+    - name: uninstall apache httpd
+      yum:
+        pkg: httpd
+        autoremove: yes
+        state: absent
+
+    - name: delete index.html file
+      file:
+        state: absent
+        path: "{{ www_root }}/index.html"
+
+    - name: firewalld close http port
+      firewalld:
+        service: http
+        permanent: true
+        state: disabled
+    - name: restart firewalld
+      service:
+         name: firewalld
+         state: restarted
