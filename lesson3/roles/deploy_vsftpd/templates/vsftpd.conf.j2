@@ -1,0 +1,23 @@
+# General settings
+#
+
+connect_from_port_20={{ vsftpd_connect_from_port_20 }}
+listen={{ vsftpd_listen }}
+listen_ipv6={{ vsftpd_listen_ipv6 }}
+pam_service_name=vsftpd
+
+#
+# Access control for anonymous users
+#
+anonymous_enable=YES
+anon_root=/var/ftp
+anon_mkdir_write_enable=YES
+anon_other_write_enable=YES
+anon_upload_enable=YES
+allow_writeable_chroot=YES
+no_anon_password=YES
+#
+# Access control for registered users
+#
+local_enable=NO
+write_enable=YES

@@ -1,0 +1,37 @@
+---
+# tasks file for deploy_httpd
+- block: 
+  - name: Install httpd for RedHat
+    yum: name=httpd state=latest
+  - name: Start httpd service
+    service: name=httpd state=started enabled=yes
+  when: ansible_os_family == "RedHat"
+
+- block: 
+  - name: Install httpd for Debian
+    yum: name=httpd state=latest
+  - name: Start httpd service
+    service: name=apache2 state=started enabled=yes
+  when: ansible_os_family == "Debian"
+
+- block: 
+  - name: Install httpd for RedHat
+    yum: name=apache2 state=latest
+  - name: Start httpd service
+    service: name=httpd state=started enabled=yes
+  when: ansible_os_family == "Ubuntu"
+
+- block:
+  - name: firewalld open http port
+    firewalld: service=http state=enabled permanent=true
+  - name: restart firewalld
+    service: name=firewalld state=restarted
+  when: ansible_os_family == "RedHat"
+  
+
+- name: Generate index.html file and copy it to nodes
+  template: src=index.j2 dest={{ dest_folder }}/index.html mode=0555
+  notify:
+    - Restart httpd Redhat
+    - Restart httpd Debian
+    - Restart httpd Ubuntu

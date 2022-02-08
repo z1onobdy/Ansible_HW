@@ -1,0 +1,7 @@
+---
+- name: install httpd service and copy index.html
+  hosts: all
+
+
+  roles:
+  - deploy_httpd

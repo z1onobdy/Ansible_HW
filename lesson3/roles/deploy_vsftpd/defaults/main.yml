@@ -1,0 +1,10 @@
+---
+# defaults file for deploy_vsftpd
+vsftpd_anonymous_enable: true
+vsftpd_connect_from_port_20: true
+vsftpd_listen: true
+vsftpd_listen_ipv6: false
+vsftpd_local_enable: false
+vsftpd_write_enable: true
+vsftpd_setype: public_content_t
+vstfpd_config_file: /etc/vsftpd/vsftpd.conf

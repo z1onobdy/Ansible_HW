@@ -1,0 +1,15 @@
+<<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Ansible lesson3</title>
+  </head>
+  <body>
+    “Welcome to my web server”
+    <font color="blue" Some insormation about server: <br>
+      OS Family: {{ ansible_os_family }}<br>
+      Hostname: {{ ansible_fqdn }}<br>
+      IP Address: {{ ansible_eth0.ipv4.address }}<br>
+      Today date is: {{ ansible_date_time.date }}<br>
+  </body>
+</html>

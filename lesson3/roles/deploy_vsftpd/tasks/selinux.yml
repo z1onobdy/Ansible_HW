@@ -1,0 +1,25 @@
+---
+
+- name: set seboolean ftpd_anon_write
+  seboolean:
+    name: ftpd_anon_write
+    state: yes
+    persistent: yes
+
+- name: Allow rw for anonymous users
+  sefcontext:
+    target: '/var/ftp/(/.*)?'
+    setype: public_content_t
+    state: absent
+
+- name: Apply SELinuxe file context R
+  command: restorecon -F -R -v /var/ftp
+
+- name: Allow rw for anonymous users
+  sefcontext:
+    target: '/var/ftp/pub(/.*)?'
+    setype: public_content_rw_t
+    state: present
+
+- name: Apply SELinuxe file context
+  command: restorecon -F -R -v /var/ftp/pub

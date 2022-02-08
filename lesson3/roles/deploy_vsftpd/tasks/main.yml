@@ -1,0 +1,34 @@
+---
+# tasks file for deploy_vsftpd
+- name: Install vsftpd
+  yum: pkg=vsftpd state=present
+
+- name: install libsemanage-python
+  yum: pkg=python3-libsemanage state=present
+- include_tasks: selinux.yml
+  #when: ansible_selinux is defined and ansible_selinux != false and ansible_selinux.status == 'enables'
+
+- name: Copy vsftd configuration file
+  template:
+    src: vsftpd.conf.j2
+    dest: "{{ vstfpd_config_file }}"
+    mode: '0600'
+  notify: restart vsftpd
+
+- name: anon_root
+  file:
+    path: /var/ftp/pub
+    state: directory
+    owner: root
+    mode: 0777
+    setype: public_content_rw_t 
+
+- name: start vsftpd service
+  service: name=vsftpd state=started enabled=true
+
+- name: firewalld open ftp port
+  firewalld: service=ftp state=enabled permanent=true
+
+- name: restart firewalld
+  service: name=firewalld state=restarted
+
